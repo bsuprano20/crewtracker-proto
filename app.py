@@ -33,9 +33,6 @@ with st.form("new_entry"):
 edited_entries = st.data_editor(
     ENTRIES,
     use_container_width=True,
-    # If you want to allow adding/deleting rows:
-    allow_insert=True,
-    allow_delete=True,
 )
 
 if st.button("Save All Edits"):
