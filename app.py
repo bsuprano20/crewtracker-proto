@@ -1,4 +1,8 @@
 import streamlit as st
+from PIL import Image
+
+# Load logo image
+logo = Image.open("logo.png")
 import pandas as pd
 from datetime import date
 from data import JOBS, COST_CODES, ENTRIES
@@ -8,6 +12,10 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 if not st.session_state.logged_in:
+    # Display logo and title on login screen
+    st.image(logo, width=300)
+    st.markdown("# Time Card")
+    st.title("Please Log In")
     st.title("Please Log In")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
