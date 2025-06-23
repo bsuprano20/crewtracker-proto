@@ -2,8 +2,8 @@ import pandas as pd
 
 # Sample master tables
 JOBS = pd.DataFrame([
-    {"id": 1, "name": "Site A"},
-    {"id": 2, "name": "Site B"},
+    {"id": 1, "name": "Kenyon"},
+    {"id": 2, "name": "TWHS"},
 ])
 
 COST_CODES = pd.DataFrame([
