@@ -30,15 +30,35 @@ with st.form("new_entry"):
         st.success("Entry saved!")
 
 # --- Edit Past Entries ---
-edited_entries = st.data_editor(
-    ENTRIES,
-    use_container_width=True,
+st.subheader("📝 Edit Past Entries")
+# Prepare entries with job names
+ENTRIES = ENTRIES.reset_index(drop=True)
+entries = ENTRIES.merge(
+    JOBS[["id","name"]], left_on="job_id", right_on="id", how="left"
+).rename(columns={"name": "job_name"})
+
+# Filter by Job
+job_opts = [None] + list(JOBS["id"])
+job_filter = st.selectbox(
+    "Filter by Job", job_opts,
+    format_func=lambda x: "All Jobs" if x is None else JOBS.loc[JOBS.id == x, "name"].iloc[0]
+)
+if job_filter is not None:
+    entries = entries[entries.job_id == job_filter]
+
+# Editable table
+edited = st.data_editor(
+    entries,
+    use_container_width=True
 )
 
 if st.button("Save All Edits"):
-    edited_entries.to_csv("entries.csv", index=False)
+    # Drop merge columns
+    df2 = edited.drop(columns=["job_name","id"])
+    # Apply updates back to ENTRIES
+    ENTRIES.loc[df2.index, df2.columns] = df2
+    ENTRIES.to_csv("entries.csv", index=False)
     st.success("All edits saved!")
-    ENTRIES = edited_entries.copy()
 
 # --- Reporting ---
 st.header("Performance Report")
@@ -48,18 +68,17 @@ sel = st.selectbox(
 )
 df = ENTRIES[ENTRIES.job_id == sel].copy()
 if not df.empty:
-    # Join PMPH goals
     df = df.merge(
         COST_CODES[["id", "pmph_goal"]],
         left_on="cost_code_id", right_on="id"
     )
     df["estimated"] = df["hours"] * df["pmph_goal"]
-    df["variance"]  = df["units_installed"] - df["estimated"]
+    df["variance"] = df["units_installed"] - df["estimated"]
     st.dataframe(
-        df[["date", "cost_code_id", "hours", "units_installed", "estimated", "variance"]]
+        df[["date","cost_code_id","job_id","hours","units_installed","estimated","variance"]]
     )
     st.line_chart(
-        df.set_index("date")[["units_installed", "estimated", "variance"]]
+        df.set_index("date")[ ["units_installed","estimated","variance"] ]
     )
 else:
     st.info("No entries for this job yet.")
