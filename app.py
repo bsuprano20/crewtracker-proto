@@ -82,6 +82,3 @@ if not df.empty:
     )
 else:
     st.info("No entries for this job yet.")
-
-else:
-    st.info("No entries for this job yet.")
