@@ -8,7 +8,7 @@ JOBS = pd.DataFrame([
 
 COST_CODES = pd.DataFrame([
     {"id": 101, "code": "CC101", "description": "Block", "pmph_goal": 10},
-    {"id": 202, "code": "CC202", "description": "Brick", "pmph_goal": 30},
+    {"id": 202, "code": "CC202", "description": "Stone", "pmph_goal": 30},
 ])
 
 # Load or initialize entries.csv
