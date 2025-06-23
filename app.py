@@ -13,8 +13,8 @@ with st.form("new_entry"):
         format_func=lambda x: JOBS.loc[JOBS.id == x, "name"].iloc[0]
     )
     cc_id = st.selectbox(
-        "Cost Code", COST_CODES["id"],
-        format_func=lambda x: COST_CODES.loc[COST_CODES.id == x, "code"].iloc[0]
+        "Cost Code - Description", COST_CODES["id"],
+        format_func=lambda x: f"{COST_CODES.loc[COST_CODES.id == x, 'code'].iloc[0]} - {COST_CODES.loc[COST_CODES.id == x, 'description'].iloc[0]}"
     )
     hrs = st.number_input("Total Hours", min_value=0.0, step=0.5)
     units = st.number_input("Units Installed", min_value=0)
@@ -80,5 +80,8 @@ if not df.empty:
     st.line_chart(
         df.set_index("date")[ ["units_installed","estimated","variance"] ]
     )
+else:
+    st.info("No entries for this job yet.")
+
 else:
     st.info("No entries for this job yet.")
