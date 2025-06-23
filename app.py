@@ -19,6 +19,9 @@ if not st.session_state.logged_in:
             st.error("Invalid credentials. Please try again.")
     st.stop()
 
+# Provide a logout button in the sidebar
+st.sidebar.button("Logout", on_click=lambda: [st.session_state.update({'logged_in': False}), st.experimental_rerun()])
+
 # --- Main App ---
 st.title("Crew Tracker Prototype (Mock Data)")
 
