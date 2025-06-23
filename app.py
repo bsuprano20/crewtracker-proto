@@ -3,6 +3,23 @@ import pandas as pd
 from datetime import date
 from data import JOBS, COST_CODES, ENTRIES
 
+# --- Simple Authentication ---
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("Please Log In")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username == "bsuprano" and password == "password":
+            st.session_state.logged_in = True
+            st.experimental_rerun()
+        else:
+            st.error("Invalid credentials. Please try again.")
+    st.stop()
+
+# --- Main App ---
 st.title("Crew Tracker Prototype (Mock Data)")
 
 # --- New Entry Form ---
