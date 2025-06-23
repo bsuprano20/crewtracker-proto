@@ -30,18 +30,17 @@ with st.form("new_entry"):
         st.success("Entry saved!")
 
 # --- Edit Past Entries ---
-st.subheader("📝 Edit Past Entries")
-# Reset index for clean editing
-ENTRIES = ENTRIES.reset_index(drop=True)
-edited_entries = st.experimental_data_editor(
+edited_entries = st.data_editor(
     ENTRIES,
-    num_rows="dynamic",
-    use_container_width=True
+    use_container_width=True,
+    # If you want to allow adding/deleting rows:
+    allow_insert=True,
+    allow_delete=True,
 )
+
 if st.button("Save All Edits"):
     edited_entries.to_csv("entries.csv", index=False)
     st.success("All edits saved!")
-    # Update in-memory data for immediate use
     ENTRIES = edited_entries.copy()
 
 # --- Reporting ---
