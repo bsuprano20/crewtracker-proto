@@ -1,13 +1,13 @@
 import streamlit as st
 from PIL import Image
-
-# Load logo image
-logo = Image.open("logo.png")
 import pandas as pd
 from datetime import date
 from data import JOBS, COST_CODES, ENTRIES
 
-# --- Simple Authentication ---
+# --- Load logo image ---
+logo = Image.open("image.png")
+
+# --- Authentication (always on) ---
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
@@ -15,8 +15,6 @@ if not st.session_state.logged_in:
     # Display logo and title on login screen
     st.image(logo, width=300)
     st.markdown("# Time Card")
-    st.title("Please Log In")
-    st.title("Please Log In")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
@@ -27,7 +25,7 @@ if not st.session_state.logged_in:
             st.error("Invalid credentials. Please try again.")
     st.stop()
 
-# Provide a logout button in the sidebar
+# --- Logout button ---
 st.sidebar.button("Logout", on_click=lambda: [st.session_state.update({'logged_in': False}), st.experimental_rerun()])
 
 # --- Main App ---
@@ -59,7 +57,6 @@ with st.form("new_entry"):
 
 # --- Edit Past Entries ---
 st.subheader("📝 Edit Past Entries")
-# Prepare entries with job names
 ENTRIES = ENTRIES.reset_index(drop=True)
 entries = ENTRIES.merge(
     JOBS[["id","name"]], left_on="job_id", right_on="id", how="left"
@@ -81,14 +78,12 @@ edited = st.data_editor(
 )
 
 if st.button("Save All Edits"):
-    # Drop merge columns
     df2 = edited.drop(columns=["job_name","id"])
-    # Apply updates back to ENTRIES
     ENTRIES.loc[df2.index, df2.columns] = df2
     ENTRIES.to_csv("entries.csv", index=False)
     st.success("All edits saved!")
 
-# --- Reporting ---
+# --- Performance Report ---
 st.header("Performance Report")
 sel = st.selectbox(
     "Select Job for Report", JOBS["id"],
